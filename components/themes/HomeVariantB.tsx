@@ -126,7 +126,7 @@ export function HomeVariantB({
             fontFamily: '"Noto Serif SC", "Source Han Serif SC", Georgia, serif',
             color: FG,
           }}>
-            乔木<span style={{ color: ACCENT }}>·</span>博客
+            只在其中<span style={{ color: ACCENT }}>·</span>颠倒颠
           </h1>
         </Link>
         <div className="editorial-masthead-meta" style={{
@@ -138,7 +138,7 @@ export function HomeVariantB({
           fontFamily: '"JetBrains Mono", ui-monospace, monospace',
           letterSpacing: '0.05em',
         }}>
-          <span>AI · PRODUCT · INDEPENDENT THINKING</span>
+          <span>PHILOSOPHY · TECHNOLOGY · UNIFIED FIELD</span>
           <span>{posts.length} ARTICLES</span>
         </div>
       </div>
@@ -361,7 +361,7 @@ export function HomeVariantB({
         fontFamily: '"JetBrains Mono", ui-monospace, monospace',
         letterSpacing: '0.1em',
       }}>
-        <span>© {new Date().getFullYear()} 乔木博客</span>
+        <span>© {new Date().getFullYear()} 致敬 <a href="https://github.com/joeseesun/qiaomu-blog-opensource" target="_blank" rel="noopener noreferrer" style={{ color: MUTED, textDecoration: 'underline', textUnderlineOffset: '2px' }}>@向阳乔木</a></span>
         <span>独立 · 不商业化 · RSS 友好</span>
       </div>
 

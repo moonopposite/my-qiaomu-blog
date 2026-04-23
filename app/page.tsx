@@ -61,9 +61,9 @@ export default async function Home({
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebSite',
-            name: '乔木博客',
+            name: '只在其中颠倒颠',
             url: BASE_URL,
-            description: '记录思考，分享所学，留住当下。技术、生活、读书笔记的数字花园。',
+            description: '求知若渴，举轻若重。哲学、技术、生命统一场的数字花园。',
             potentialAction: {
               '@type': 'SearchAction',
               target: { '@type': 'EntryPoint', urlTemplate: `${BASE_URL}/search?q={search_term_string}` },
@@ -78,7 +78,7 @@ export default async function Home({
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'Organization',
-            name: '乔木博客',
+            name: '只在其中颠倒颠',
             url: BASE_URL,
             logo: { '@type': 'ImageObject', url: `${BASE_URL}/icon-512.png` },
           }),

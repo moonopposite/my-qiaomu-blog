@@ -38,10 +38,10 @@ const SITE_URL = getSiteUrl()
 export const metadata: Metadata = {
   metadataBase: getSiteUrlObject(),
   title: {
-    default: '乔木博客',
-    template: '%s · 乔木博客',
+    default: '只在其中颠倒颠',
+    template: '%s · 只在其中颠倒颠',
   },
-  description: '记录思考，分享所学，留住当下。技术、生活、读书笔记的数字花园。',
+  description: '求知若渴，举轻若重。哲学、技术、生命统一场的数字花园。',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -62,24 +62,24 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'zh_CN',
     url: SITE_URL,
-    siteName: '乔木博客',
-    title: '乔木博客',
-    description: '记录思考，分享所学，留住当下。技术、生活、读书笔记的数字花园。',
+    siteName: '只在其中颠倒颠',
+    title: '只在其中颠倒颠',
+    description: '求知若渴，举轻若重。哲学、技术、生命统一场的数字花园。',
     images: [
       {
         url: '/icon-512.png',
         width: 512,
         height: 512,
-        alt: '乔木博客',
+        alt: '只在其中颠倒颠',
       },
     ],
   },
   twitter: {
     card: 'summary',
-    site: '@vista8',
-    creator: '@vista8',
-    title: '乔木博客',
-    description: '记录思考，分享所学，留住当下。技术、生活、读书笔记的数字花园。',
+    site: '@moonopposite',
+    creator: '@moonopposite',
+    title: '只在其中颠倒颠',
+    description: '求知若渴，举轻若重。哲学、技术、生命统一场的数字花园。',
     images: ['/icon-512.png'],
   },
 };

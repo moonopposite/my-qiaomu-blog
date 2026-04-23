@@ -48,7 +48,7 @@ export async function generateMetadata({
     return {
       title: post.title,
       description: post.description,
-      authors: [{ name: '向阳乔木' }],
+      authors: [{ name: 'Tim Liu' }],
       alternates: {
         canonical: `${baseUrl}/${post.slug}`,
       },
@@ -58,7 +58,7 @@ export async function generateMetadata({
         type: 'article',
         publishedTime: new Date(post.published_at * 1000).toISOString(),
         modifiedTime: new Date(post.updated_at * 1000).toISOString(),
-        authors: ['向阳乔木'],
+        authors: ['Tim Liu'],
         images: [{ url: ogImage }],
       },
       twitter: {
@@ -202,8 +202,8 @@ export default async function PostPage({
             headline: post.title,
             description: post.description || '',
             image: ogImage,
-            author: { '@type': 'Person', name: '向阳乔木', url: 'https://x.com/vista8' },
-            publisher: { '@type': 'Organization', name: '乔木博客', url: baseUrl, logo: { '@type': 'ImageObject', url: `${baseUrl}/icon-512.png` } },
+            author: { '@type': 'Person', name: 'Tim Liu', url: 'https://github.com/moonopposite' },
+            publisher: { '@type': 'Organization', name: '只在其中颠倒颠', url: baseUrl, logo: { '@type': 'ImageObject', url: `${baseUrl}/icon-512.png` } },
             datePublished: new Date(post.published_at * 1000).toISOString(),
             dateModified: new Date(post.updated_at * 1000).toISOString(),
             mainEntityOfPage: { '@type': 'WebPage', '@id': `${baseUrl}/${post.slug}` },
