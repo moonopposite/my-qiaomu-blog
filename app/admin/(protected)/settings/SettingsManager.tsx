@@ -6,7 +6,6 @@ import type { RuntimeCapabilities } from '@/lib/runtime-capabilities'
 import { normalizeTheme, type BodyFont, type Theme } from '@/lib/appearance'
 import { NavLinksEditor } from './NavLinksEditor'
 import { CustomJsEditor } from './CustomJsEditor'
-import { ApiTokensManager } from './ApiTokensManager'
 import { ThemeManager } from './ThemeManager'
 import { CategoryManager } from '../categories/CategoryManager'
 import { AiProviderManager } from './AiProviderManager'
@@ -15,6 +14,7 @@ import { AiImageProviderManager } from './AiImageProviderManager'
 import { AiImageActionsManager } from './AiImageActionsManager'
 import { AiPostGeneratorsManager } from './AiPostGeneratorsManager'
 import { RuntimeCapabilitiesPanel } from './RuntimeCapabilitiesPanel'
+import { ThirdPartyPublishingManager } from './ThirdPartyPublishingManager'
 
 interface Category {
   name: string
@@ -141,8 +141,8 @@ export function SettingsManager({
     },
     {
       id: 'tokens',
-      label: 'API Token',
-      content: <ApiTokensManager />,
+      label: '第三方发布',
+      content: <ThirdPartyPublishingManager />,
     },
     {
       id: 'ai-provider',

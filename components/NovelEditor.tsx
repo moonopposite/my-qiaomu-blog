@@ -10,6 +10,9 @@ import {
   Loader2,
   Lock,
   Link2,
+  Copy,
+  FileDown,
+  Send,
   PanelRightOpen,
   PanelRightClose,
   ImageIcon,
@@ -33,6 +36,7 @@ import { InputModal } from '@/components/InputModal'
 import { CategorySelector } from '@/components/CategorySelector'
 import { ImageGenerationModal } from '@/components/ImageGenerationModal'
 import { ImageCropModal } from '@/components/ImageCropModal'
+import { WeChatPublishModal } from '@/components/WeChatPublishModal'
 import { useToast } from '@/components/Toast'
 import { startBackgroundTask } from '@/lib/client-background-task'
 import { AIModal } from '@/lib/ai-modal'
@@ -51,12 +55,14 @@ import {
   replaceImageNodeAtPosition,
   uploadEditorFile,
 } from '@/lib/editor-file-upload'
+import { copyAsWechatArticleFormat, downloadArticleAsPdf } from '@/lib/wechat-copy'
 import {
   extractFilesFromClipboard,
   useEditorAuxiliaryModals,
   useEditorUploadTriggers,
 } from '@/lib/editor-ui'
 import type { EditorImageActionTarget } from '@/lib/resizable-image'
+import { resolvePostCoverImage } from '@/lib/default-cover-images'
 import { buildAutoDescription, normalizePostSlug, sanitizePostSlugInput } from '@/lib/post-utils'
 import { getSiteDisplayUrl } from '@/lib/site-config'
 import { resizeTextareaHeight, useAutoResizeTextarea } from '@/lib/textarea-autosize'
@@ -69,7 +75,7 @@ type PublishStatus = 'public' | 'draft' | 'encrypted' | 'unlisted'
 type SaveState = 'saved' | 'dirty' | 'saving' | 'error'
 
 const SIDEBAR_KEY = 'qmblog:sidebar-open'
-const AUTOSAVE_DEBOUNCE_MS = 60000
+const AUTOSAVE_DEBOUNCE_MS = 1500
 const AUTOSAVE_MAX_RETRY_DELAY_MS = 10000
 const SITE_DISPLAY_URL = getSiteDisplayUrl()
 
@@ -143,6 +149,7 @@ export function NovelEditor({ initialData }: NovelEditorProps = {}) {
   // ── UI state ──
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [publishPanelOpen, setPublishPanelOpen] = useState(false)
+  const [wechatPublishOpen, setWechatPublishOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [uploadingImage, setUploadingImage] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -832,6 +839,77 @@ export function NovelEditor({ initialData }: NovelEditorProps = {}) {
     }
   }
 
+  const handleCopyWechat = async () => {
+    const editor = editorRef.current
+    const normalizedTitle = title.trim() || '无标题'
+
+    if (!editor) {
+      toast.error('编辑器还没准备好。')
+      return
+    }
+
+    const content = editor.getText({ blockSeparator: '\n\n' }).trim()
+    const html = editor.getHTML()
+    const hasContent = content || /<(img|video|audio|iframe)\s/i.test(html)
+
+    if (!hasContent) {
+      toast.error('正文还是空的。')
+      return
+    }
+
+    try {
+      await copyAsWechatArticleFormat(normalizedTitle, html)
+      toast.success('已复制公众号格式')
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : '复制公众号格式失败')
+    }
+  }
+
+  const handleDownloadPdf = async () => {
+    const editor = editorRef.current
+    const normalizedTitle = title.trim() || '无标题'
+
+    if (!editor) {
+      toast.error('编辑器还没准备好。')
+      return
+    }
+
+    const content = editor.getText({ blockSeparator: '\n\n' }).trim()
+    const html = editor.getHTML()
+    const hasContent = content || /<(img|video|audio|iframe)\s/i.test(html)
+
+    if (!hasContent) {
+      toast.error('正文还是空的。')
+      return
+    }
+
+    try {
+      await downloadArticleAsPdf(normalizedTitle, html)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : '导出 PDF 失败')
+    }
+  }
+
+  const handleOpenWechatPublish = () => {
+    const editor = editorRef.current
+
+    if (!editor) {
+      toast.error('编辑器还没准备好。')
+      return
+    }
+
+    const content = editor.getText({ blockSeparator: '\n\n' }).trim()
+    const html = editor.getHTML()
+    const hasContent = content || /<(img|video|audio|iframe)\s/i.test(html)
+
+    if (!hasContent) {
+      toast.error('正文还是空的。')
+      return
+    }
+
+    setWechatPublishOpen(true)
+  }
+
   // ── Tag input ──
   const [tagInput, setTagInput] = useState('')
   const addTag = (value: string) => {
@@ -875,6 +953,10 @@ export function NovelEditor({ initialData }: NovelEditorProps = {}) {
     saveState === 'error' ? 'text-orange-500' : 'text-[var(--stone-gray)]'
 
   const showSidebar = sidebarOpen
+  const wechatSourceUrl = useMemo(() => {
+    const currentSlug = normalizePostSlug(editSlug || slug)
+    return currentSlug ? `https://${SITE_DISPLAY_URL}/${currentSlug}` : ''
+  }, [editSlug, slug])
 
   return (
     <div className="min-h-screen bg-[var(--editor-app-bg)]">
@@ -927,6 +1009,33 @@ export function NovelEditor({ initialData }: NovelEditorProps = {}) {
 
           {/* Right: Actions */}
           <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={handleCopyWechat}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--editor-muted)] hover:bg-[var(--editor-soft)] hover:text-[var(--editor-accent)] transition"
+              title="复制公众号格式"
+            >
+              <Copy className="h-4 w-4" />
+            </button>
+
+            <button
+              type="button"
+              onClick={handleOpenWechatPublish}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--editor-muted)] hover:bg-[var(--editor-soft)] hover:text-[var(--editor-accent)] transition"
+              title="发布到公众号"
+            >
+              <Send className="h-4 w-4" />
+            </button>
+
+            <button
+              type="button"
+              onClick={handleDownloadPdf}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[var(--editor-muted)] hover:bg-[var(--editor-soft)] hover:text-[var(--editor-accent)] transition"
+              title="下载 PDF"
+            >
+              <FileDown className="h-4 w-4" />
+            </button>
+
             <button
               type="button"
               onClick={(e) => openDocumentAIModal(e.currentTarget)}
@@ -1356,6 +1465,20 @@ export function NovelEditor({ initialData }: NovelEditorProps = {}) {
           )}
         </aside>
       </div>
+
+      <WeChatPublishModal
+        isOpen={wechatPublishOpen}
+        onClose={() => setWechatPublishOpen(false)}
+        title={title.trim() || '无标题'}
+        html={editorRef.current?.getHTML() || ''}
+        defaultDigest={description}
+        defaultSourceUrl={wechatSourceUrl}
+        defaultCoverImageUrl={resolvePostCoverImage({
+          cover_image: coverImage,
+          slug: normalizePostSlug(slug) || editSlug || title,
+          title,
+        })}
+      />
 
       <InputModal open={inputModal.open} title={inputModal.title} placeholder={inputModal.placeholder} onConfirm={handleInputModalConfirm} onCancel={handleInputModalCancel} />
 

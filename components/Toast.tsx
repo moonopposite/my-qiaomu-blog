@@ -67,37 +67,31 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 }
 
 function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
-  const bgColor = {
-    success: 'bg-emerald-50 border-emerald-200 text-emerald-800',
-    error: 'bg-rose-50 border-rose-200 text-rose-800',
-    warning: 'bg-amber-50 border-amber-200 text-amber-800',
-    info: 'bg-blue-50 border-blue-200 text-blue-800',
-  }[toast.type]
-
-  const icon = {
-    success: '✓',
-    error: '✕',
-    warning: '⚠',
-    info: 'ℹ',
+  const accentColor = {
+    success: 'var(--editor-accent)',
+    error: '#c65b5b',
+    warning: '#b8873a',
+    info: 'var(--stone-gray)',
   }[toast.type]
 
   return (
     <div
-      className={`
-        ${bgColor}
-        pointer-events-auto
-        min-w-[300px] max-w-md
-        px-4 py-3 rounded-lg border
-        shadow-lg
-        flex items-start gap-3
-        animate-in slide-in-from-right-full duration-300
-      `}
+      className="pointer-events-auto flex min-w-[220px] max-w-sm items-start gap-3 rounded-xl border px-3.5 py-3 shadow-[0_12px_28px_rgba(0,0,0,0.12)] backdrop-blur-md animate-in slide-in-from-right-full duration-300"
+      style={{
+        background: 'color-mix(in srgb, var(--editor-panel) 94%, transparent)',
+        borderColor: 'var(--editor-line)',
+        color: 'var(--editor-ink)',
+      }}
     >
-      <span className="text-lg font-semibold flex-shrink-0">{icon}</span>
-      <p className="flex-1 text-sm font-medium">{toast.message}</p>
+      <span
+        className="mt-1 h-2.5 w-2.5 flex-shrink-0 rounded-full"
+        style={{ background: accentColor }}
+        aria-hidden="true"
+      />
+      <p className="flex-1 text-sm leading-6">{toast.message}</p>
       <button
         onClick={onClose}
-        className="flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity"
+        className="flex-shrink-0 rounded p-0.5 text-[var(--editor-muted)] transition hover:bg-[var(--editor-soft)] hover:text-[var(--editor-ink)]"
         aria-label="关闭"
       >
         <X className="w-4 h-4" />

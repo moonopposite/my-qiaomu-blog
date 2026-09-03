@@ -7,6 +7,7 @@ import { CustomJsInjector } from "@/components/CustomJsInjector";
 import { FONT_CONFIG, THEME_OPTIONS, THEME_STORAGE_KEY, normalizeTheme } from "@/lib/appearance";
 import { getAppCloudflareEnv } from "@/lib/cloudflare";
 import { getSetting } from "@/lib/db";
+import { resolveDefaultSiteCoverImage } from "@/lib/default-cover-images";
 import { getSiteUrl, getSiteUrlObject } from "@/lib/site-config";
 
 const geistSans = localFont({
@@ -34,12 +35,13 @@ const geistMono = localFont({
 });
 
 const SITE_URL = getSiteUrl()
+const DEFAULT_SITE_OG_IMAGE = resolveDefaultSiteCoverImage(SITE_URL)
 
 export const metadata: Metadata = {
   metadataBase: getSiteUrlObject(),
   title: {
     default: '只在其中颠倒颠',
-    template: '%s · 只在其中颠倒颠',
+    template: '%s · 乔木博客',
   },
   description: '求知若渴，举轻若重。哲学、技术、生命统一场的数字花园。',
   icons: {
@@ -67,20 +69,20 @@ export const metadata: Metadata = {
     description: '求知若渴，举轻若重。哲学、技术、生命统一场的数字花园。',
     images: [
       {
-        url: '/icon-512.png',
-        width: 512,
-        height: 512,
+        url: DEFAULT_SITE_OG_IMAGE,
+        width: 1280,
+        height: 720,
         alt: '只在其中颠倒颠',
       },
     ],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     site: '@moonopposite',
     creator: '@moonopposite',
     title: '只在其中颠倒颠',
     description: '求知若渴，举轻若重。哲学、技术、生命统一场的数字花园。',
-    images: ['/icon-512.png'],
+    images: [DEFAULT_SITE_OG_IMAGE],
   },
 };
 

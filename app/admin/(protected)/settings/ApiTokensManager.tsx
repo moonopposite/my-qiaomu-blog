@@ -99,7 +99,7 @@ export function ApiTokensManager() {
   return (
     <div className="space-y-6">
       <p className="text-sm text-[var(--editor-muted)]">
-        API Token 用于 Obsidian 插件、Chrome 插件、Claude Skill 等外部工具发布文章。
+        API Token 用于 Obsidian 插件、Chrome 插件、Claude Skill 等外部工具调用博客接口。
       </p>
 
       {/* 新 Token 提示（只显示一次） */}
@@ -145,9 +145,9 @@ export function ApiTokensManager() {
           className="px-4 py-2 text-sm bg-[var(--editor-accent)] text-white rounded-lg font-medium
                      hover:brightness-105 disabled:opacity-50"
         >
-          {creating ? '创建中...' : '生成 Token'}
-        </button>
-      </div>
+            {creating ? '创建中...' : '生成 Token'}
+          </button>
+        </div>
 
       {/* Token 列表 */}
       {tokens.length === 0 ? (

@@ -1,6 +1,7 @@
 export { getDB, ensureSchema, type Database } from '@/lib/repositories/schema'
 export {
   isPubliclyAccessiblePost,
+  isSearchIndexablePost,
   type CategoryRow,
   type CountRow,
   type Post,
