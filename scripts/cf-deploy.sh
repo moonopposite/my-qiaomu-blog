@@ -11,8 +11,12 @@ cd "${REPO_ROOT}"
 echo "==> using wrangler config: ${CONFIG_PATH}"
 bash "${SCRIPT_DIR}/cf-validate-config.sh" "${CONFIG_PATH}"
 
+# 裁剪死代码（@vercel/og），否则免费档 3 MiB 过不去；必须在 build 之前动手
+node "${SCRIPT_DIR}/trim-worker-bundle.mjs"
+
 rm -rf .next .open-next
 npx opennextjs-cloudflare build
+node "${SCRIPT_DIR}/trim-worker-bundle.mjs"   # 产物目录再扫一遍
 
 # D1 初始化只在首次部署需要。db/schema.sql 用的是裸 CREATE TABLE（无 IF NOT EXISTS），
 # 对已有库再跑一次必定在第一条语句报 "table posts already exists" 并把整个部署打断。
