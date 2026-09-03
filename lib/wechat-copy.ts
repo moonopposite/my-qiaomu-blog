@@ -1,6 +1,5 @@
 'use client'
 
-import html2pdf from 'html2pdf.js'
 import juice from 'juice'
 import { buildWechatExportCss, normalizeWechatExportHtml, type WechatExportStyleTokens } from './wechat-export-style'
 
@@ -489,6 +488,8 @@ export async function downloadArticleAsPdf(title: string, html: string) {
       },
     }
 
+    // fork-local: 延迟加载，避免 html2pdf(内含 jspdf+html2canvas) 进入 worker 包体
+    const { default: html2pdf } = await import('html2pdf.js')
     // html2pdf.js runtime supports `pagebreak`, but its bundled d.ts omits it.
     await html2pdf()
       .set(pdfOptions as never)
