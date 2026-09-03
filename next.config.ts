@@ -2,7 +2,11 @@ import { resolve } from "node:path";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import type { NextConfig } from "next";
 
-void initOpenNextCloudflareForDev();
+// fork-local: 该初始化只服务 next dev；Next 16 下 next build 也会加载本配置，
+// 于是 CI/无 CF 登录态时构建会卡在 wrangler remote session。按 NODE_ENV 收一下。
+if (process.env.NODE_ENV === "development") {
+  void initOpenNextCloudflareForDev();
+}
 
 const nextConfig: NextConfig = {
   // 图片优化（Cloudflare 有自己的优化）
